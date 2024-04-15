@@ -1,0 +1,623 @@
+openapi: 3.0.0
+info:
+  title: College Attendance API
+  version: 1.0.0
+  description: API for managing college attendance, including students, teachers, courses, classes, and timetables.
+
+servers:
+  - url: "https://api.college.com/v1"
+
+tags:
+  - name: Users
+    description: Operations related to user management
+  - name: Students
+    description: Operations related to student profiles
+  - name: Teachers
+    description: Operations related to teacher profiles
+  - name: Courses
+    description: Operations related to courses
+  - name: Classes
+    description: Operations related to classes
+  - name: Timetables
+    description: Operations related to timetable management
+
+paths:
+  /users/register:
+    post:
+      summary: Registers a new user
+      operationId: registerUser
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - role
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum: [student, teacher]
+      responses:
+        "201":
+          description: User registered successfully
+        "400":
+          description: Invalid input
+
+  /users/login:
+    post:
+      summary: Authenticates a user
+      operationId: loginUser
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: User authenticated
+        "401":
+          description: Authentication failed
+
+  /students:
+    get:
+      summary: Retrieves all students
+      tags:
+        - "Students"
+      operationId: getAllStudents
+      responses:
+        "200":
+          description: A list of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Student"
+    post:
+      summary: Creates a new student
+      tags:
+        - "Students"
+      operationId: createStudent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Student"
+      responses:
+        "201":
+          description: Student created
+        "400":
+          description: Invalid input
+
+  /students/{studentId}:
+    get:
+      summary: Retrieves a student by ID
+      tags:
+        - "Students"
+      operationId: getStudentById
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Student found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+        "404":
+          description: Student not found
+    put:
+      summary: Updates a student
+      tags:
+        - "Students"
+      operationId: updateStudent
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Student"
+      responses:
+        "200":
+          description: Student updated
+        "400":
+          description: Invalid input
+        "404":
+          description: Student not found
+    delete:
+      summary: Deletes a student
+      tags:
+        - "Students"
+      operationId: deleteStudent
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Student deleted
+        "404":
+          description: Student not found
+
+  /teachers:
+    get:
+      summary: Retrieves all teachers
+      tags:
+        - "Teachers"
+      operationId: getAllTeachers
+      responses:
+        "200":
+          description: A list of teachers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Teacher"
+    post:
+      summary: Creates a new teacher
+      tags:
+        - "Teachers"
+      operationId: createTeacher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Teacher"
+      responses:
+        "201":
+          description: Teacher created
+        "400":
+          description: Invalid input
+
+  /teachers/{teacherId}:
+    get:
+      summary: Retrieves a teacher by ID
+      tags:
+        - "Teachers"
+      operationId: getTeacherById
+      parameters:
+        - name: teacherId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Teacher found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Teacher"
+        "404":
+          description: Teacher not found
+    put:
+      summary: Updates a teacher
+      tags:
+        - "Teachers"
+      operationId: updateTeacher
+      parameters:
+        - name: teacherId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Teacher"
+      responses:
+        "200":
+          description: Teacher updated
+        "400":
+          description: Invalid input
+        "404":
+          description: Teacher not found
+    delete:
+      summary: Deletes a teacher
+      tags:
+        - "Teachers"
+      operationId: deleteTeacher
+      parameters:
+        - name: teacherId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Teacher deleted
+        "404":
+          description: Teacher not found
+
+  /courses:
+    get:
+      summary: Retrieves all courses
+      tags:
+        - "Courses"
+      operationId: getAllCourses
+      responses:
+        "200":
+          description: A list of courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+    post:
+      summary: Creates a new course
+      tags:
+        - "Courses"
+      operationId: createCourse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Course"
+      responses:
+        "201":
+          description: Course created
+        "400":
+          description: Invalid input
+
+  /courses/{courseId}:
+    get:
+      summary: Retrieves a course by ID
+      tags:
+        - "Courses"
+      operationId: getCourseById
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Course found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+        "404":
+          description: Course not found
+    put:
+      summary: Updates a course
+      tags:
+        - "Courses"
+      operationId: updateCourse
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Course"
+      responses:
+        "200":
+          description: Course updated
+        "400":
+          description: Invalid input
+        "404":
+          description: Course not found
+    delete:
+      summary: Deletes a course
+      tags:
+        - "Courses"
+      operationId: deleteCourse
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Course deleted
+        "404":
+          description: Course not found
+
+  /classes:
+    get:
+      summary: Retrieves all classes
+      tags:
+        - "Classes"
+      operationId: getAllClasses
+      responses:
+        "200":
+          description: A list of classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Class"
+    post:
+      summary: Creates a new class
+      tags:
+        - "Classes"
+      operationId: createClass
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Class"
+      responses:
+        "201":
+          description: Class created
+        "400":
+          description: Invalid input
+
+  /classes/{classId}:
+    get:
+      summary: Retrieves a class by ID
+      tags:
+        - "Classes"
+      operationId: getClassById
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Class found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Class"
+        "404":
+          description: Class not found
+    put:
+      summary: Updates a class
+      tags:
+        - "Classes"
+      operationId: updateClass
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Class"
+      responses:
+        "200":
+          description: Class updated
+        "400":
+          description: Invalid input
+        "404":
+          description: Class not found
+    delete:
+      summary: Deletes a class
+      tags:
+        - "Classes"
+      operationId: deleteClass
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Class deleted
+        "404":
+          description: Class not found
+
+  /timetables:
+    get:
+      summary: Retrieves all timetables
+      tags:
+        - "Timetables"
+      operationId: getAllTimetables
+      responses:
+        "200":
+          description: A list of timetable entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Timetable"
+    post:
+      summary: Creates a new timetable
+      tags:
+        - "Timetables"
+      operationId: createTimetable
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Timetable"
+      responses:
+        "201":
+          description: Timetable created
+        "400":
+          description: Invalid input
+
+  /timetables/{timetableId}:
+    get:
+      summary: Retrieves a timetable by ID
+      tags:
+        - "Timetables"
+      operationId: getTimetableById
+      parameters:
+        - name: timetableId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Timetable found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Timetable"
+        "404":
+          description: Timetable not found
+    put:
+      summary: Updates a timetable
+      tags:
+        - "Timetables"
+      operationId: updateTimetable
+      parameters:
+        - name: timetableId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Timetable"
+      responses:
+        "200":
+          description: Timetable updated
+        "400":
+          description: Invalid input
+        "404":
+          description: Timetable not found
+    delete:
+      summary: Deletes a timetable
+      tags:
+        - "Timetables"
+      operationId: deleteTimetable
+      parameters:
+        - name: timetableId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Timetable deleted
+        "404":
+          description: Timetable not found
+
+components:
+  schemas:
+    Student:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - registrationNumber
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        registrationNumber:
+          type: string
+    Teacher:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+    Course:
+      type: object
+      required:
+        - title
+        - code
+        - description
+      properties:
+        title:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+    Class:
+      type: object
+      required:
+        - course
+        - teacher
+      properties:
+        course:
+          type: string
+        teacher:
+          type: string
+    Timetable:
+      type: object
+      required:
+        - class
+        - teacher
+        - dayOfWeek
+        - startTime
+        - endTime
+      properties:
+        class:
+          type: string
+        teacher:
+          type: string
+        dayOfWeek:
+          type: string
+        startTime:
+          type: string
+        endTime:
+          type: string
