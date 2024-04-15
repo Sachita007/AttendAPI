@@ -8,8 +8,14 @@ const AppError = require('../utils/AppError');
 // Get all attendance records
 // Get all attendance records
 exports.getAllAttendanceRecords = tryCatch(async (req, res, next) => {
+    // Extract classId from request parameters or query string
+    const { classId } = req.params;
+
     // Initialize the query with the AttendanceRecord model
-    let query = AttendanceRecord.find();
+    let query = AttendanceRecord.find({ class: classId });
+
+    // Populate the 'student' field with data from the 'Student' model
+    query = query.populate('student');
 
     // Initialize APIFeatures with the query and query string
     const features = new APIFeatures(query, req.query)
@@ -29,7 +35,6 @@ exports.getAllAttendanceRecords = tryCatch(async (req, res, next) => {
         }
     });
 });
-
 
 // Get attendance records for a specific user
 exports.getUserAttendanceRecords = tryCatch(async (req, res, next) => {
