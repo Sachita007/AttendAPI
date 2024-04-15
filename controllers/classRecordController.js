@@ -60,16 +60,26 @@ exports.updateAttendance = tryCatch(async (req, res, next) => {
     // Update the number of classes
     classRecord.noOfClass += 1;
 
+    var present = 0
+    var total = classRecord.students.length
     // Loop through the attendance array and update classAttended for each student
     attendance.forEach((studentData) => {
         const studentIndex = classRecord.students.findIndex(student => String(student.student) === studentData.student);
         if (studentData.status == 'Present') {
+            present = present + 1
             if (studentIndex !== -1) {
                 classRecord.students[studentIndex].classAttended += 1;
             }
         }
     });
 
+    perRecord = {
+        date: Date.now(),
+        per: ((present / total) * 100)
+    }
+
+    classRecord.attendRecord.push(perRecord)
+    console.log(classRecord)
     // Save the updated class record
     await classRecord.save();
 

@@ -7,6 +7,7 @@ const classRecordSchema = new mongoose.Schema({
         required: true
     },
     noOfClass: { type: Number, default: 0 },
+    attendRecord: [{ date: { type: Date }, per: { type: Number } }],
     students: [{
         student: {
             type: mongoose.Schema.Types.ObjectId,
