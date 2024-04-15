@@ -45,25 +45,53 @@ exports.getAttendanceRecordsByMultipleClasses = tryCatch(async (req, res, next) 
     // Initialize an array to store attendance records for all classes
     const allAttendanceRecords = [];
 
+    // Check if classIds is provided
+    if (classIds && classIds.length > 0) {
+        // Iterate through each classId and retrieve attendance records
+        for (const classId of classIds) {
+            try {
+                // Initialize the query with the AttendanceRecord model for the current classId
+                let query = AttendanceRecord.find({ class: classId });
 
-    // Iterate through each classId and retrieve attendance records
-    for (const classId of classIds) {
-        // Initialize the query with the AttendanceRecord model for the current classId
-        let query = AttendanceRecord.find({ class: classId });
+                // Populate the 'student' field with data from the 'Student' model
+                query = query.populate('student');
 
-        // Populate the 'student' field with data from the 'Student' model
-        query = query.populate('student');
+                // Initialize APIFeatures with the query and query string from req.query
+                const features = new APIFeatures(query, req.query)
+                    .filter()
+                    .sorting()
+                    .limitFields()
+                    .pagination();
 
-        // Initialize APIFeatures with the query and query string from req.query
-        const features = new APIFeatures(query, req.query)
-            .filter()
-            .sorting()
-            .limitFields()
-            .pagination();
+                // Execute the query and push attendance records to the array
+                const attendanceRecords = await features.query;
+                allAttendanceRecords.push({ classId, attendanceRecords });
+            } catch (error) {
+                console.error(`Error processing classId ${classId}: ${error}`);
+            }
+        }
+    } else {
+        // If no classIds provided, fetch all attendance records without filtering by class ID
+        try {
+            // Initialize the query with the AttendanceRecord model
+            let query = AttendanceRecord.find();
 
-        // Execute the query and push attendance records to the array
-        const attendanceRecords = await features.query;
-        allAttendanceRecords.push({ classId, attendanceRecords });
+            // Populate the 'student' field with data from the 'Student' model
+            query = query.populate('student');
+
+            // Initialize APIFeatures with the query and query string from req.query
+            const features = new APIFeatures(query, req.query)
+                .filter()
+                .sorting()
+                .limitFields()
+                .pagination();
+
+            // Execute the query and push attendance records to the array
+            const attendanceRecords = await features.query;
+            allAttendanceRecords.push({ attendanceRecords });
+        } catch (error) {
+            console.error(`Error fetching all attendance records: ${error}`);
+        }
     }
 
     res.status(200).json({
