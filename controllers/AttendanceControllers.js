@@ -3,6 +3,8 @@ const AttendanceRecord = require('../models/AttendanceRecord');
 const APIFeatures = require('../utils/apiFeatures');
 const tryCatch = require('../utils/tryCatch');
 const AppError = require('../utils/AppError');
+const ObjectId = mongoose.Types.ObjectId;
+
 // Utility for async/await error handling
 
 // Get all attendance records
@@ -35,6 +37,41 @@ exports.getAllAttendanceRecords = tryCatch(async (req, res, next) => {
         }
     });
 });
+
+exports.getAttendanceRecordsByMultipleClasses = tryCatch(async (req, res, next) => {
+    // Extract classIds from request body
+    const { classIds } = req.body;
+
+    // Initialize an array to store attendance records for all classes
+    const allAttendanceRecords = [];
+
+
+    // Iterate through each classId and retrieve attendance records
+    for (const classId of classIds) {
+        // Initialize the query with the AttendanceRecord model for the current classId
+        let query = AttendanceRecord.find({ class: classId });
+
+        // Populate the 'student' field with data from the 'Student' model
+        query = query.populate('student');
+
+        // Initialize APIFeatures with the query and query string from req.query
+        const features = new APIFeatures(query, req.query)
+            .filter()
+            .sorting()
+            .limitFields()
+            .pagination();
+
+        // Execute the query and push attendance records to the array
+        const attendanceRecords = await features.query;
+        allAttendanceRecords.push({ classId, attendanceRecords });
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: allAttendanceRecords
+    });
+});
+
 
 // Get attendance records for a specific user
 exports.getUserAttendanceRecords = tryCatch(async (req, res, next) => {

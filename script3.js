@@ -4,7 +4,7 @@ const studentsResponse = {
     "data": {
         "classRecord": {
             "_id": "661c78191b06e9ce8bed17e7",
-            "class": "661b289bb50ece57f8566803",
+            "class": "661d12e3e6feeb39b5bad4d7",
             "noOfClass": 0,
             "students": [
                 {
@@ -783,7 +783,7 @@ function generateAttendanceRecords(students) {
         const status = generateAttendanceStatus();
         const date = generateRandomDate(new Date(2024, 3, 1), new Date()); // Random date within April 2024
         const attendanceRecord = {
-            "class": "661b289bb50ece57f8566803",
+            "class": "661d12e3e6feeb39b5bad4d7",
             "student": student.student._id,
             "status": status,
             "date": date

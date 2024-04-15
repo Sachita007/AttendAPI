@@ -7,6 +7,7 @@ router.route("/:classId").post(classRecordController.updateAttendance, attendanc
 router.route("/student/:userId").get(attendanceControllers.getUserAttendanceRecords)
 router.route("/:id").put(attendanceControllers.updateAttendanceRecord).delete(attendanceControllers.deleteAttendanceRecord)
 router.route("/class/:classId").get(attendanceControllers.getTeacherClassAttendanceRecords)
+router.route("/").post(attendanceControllers.getAttendanceRecordsByMultipleClasses)
 
 
 module.exports = router;
