@@ -7,6 +7,8 @@ const classRoutes = require("./rutes/ClassRoutes")
 const classControllers = require("./controllers/classControllers")
 const attendanceRoute = require("./rutes/attendanceRoute")
 const classRecordRoute = require("./rutes/classRecordRoute")
+var cors = require('cors')
+app.use(cors())
 
 
 
