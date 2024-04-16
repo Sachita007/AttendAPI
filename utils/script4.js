@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const Subject = require("./models/Subject");
-const Class = require("./models/Class");
+const Subject = require("../models/Subject");
+const Class = require("../models/Class");
 
 // Function to generate random time within a range
 function generateRandomTime() {

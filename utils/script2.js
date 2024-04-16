@@ -1,7 +1,7 @@
-const User = require('./models/User'); // Assuming userModel.js is in the same directory
+const User = require('../models/User'); // Assuming userModel.js is in the same directory
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const ClassRecord = require('./models/ClassRecord'); // Import the ClassRecord model
+const ClassRecord = require('../models/ClassRecord'); // Import the ClassRecord model
 
 dotenv.config({ path: "./.env" });
 

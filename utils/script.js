@@ -1,4 +1,4 @@
-const User = require('./models/User'); // Assuming userModel.js is in the same directory
+const User = require('../models/User'); // Assuming userModel.js is in the same directory
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 dotenv.config({ path: "./.env" });
